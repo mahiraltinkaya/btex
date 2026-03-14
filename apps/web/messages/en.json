@@ -1,0 +1,203 @@
+{
+  "HomePage": {
+    "title": "btext",
+    "setup-complete": "Setup Complete",
+    "setup-description": "Tailwind CSS v4 + shadcn/ui + Dark Mode are ready.",
+    "demo-input-label": "Demo Input",
+    "demo-input-placeholder": "Type something..."
+  },
+  "LandingPage": {
+    "nav": {
+      "allEvents": "All Concerts & Events",
+      "festival": "Festival",
+      "comedy": "Comedy Shows",
+      "concertWeek": "Concert Week",
+      "register": "Register",
+      "logIn": "Log In"
+    },
+    "hero": {
+      "headline": "GRAB YOUR TICKETS",
+      "subheadline": "Don't miss the hottest events! Secure your seats today for an unforgettable night of music, emotion, and energy!",
+      "cta": "Tickets On Sale Now"
+    },
+    "search": {
+      "title": "Find Your Next Event",
+      "allGenres": "All Genres",
+      "allLocations": "All Locations",
+      "allDates": "All Dates",
+      "findEvents": "Find Tickets"
+    },
+    "whatsHappening": {
+      "title": "WHAT'S HAPPENING?",
+      "event1": {
+        "name": "Jake Rivers",
+        "venue": "Live At Coca-Cola Arena"
+      },
+      "event2": {
+        "name": "Luna Belle",
+        "venue": "Live At Etihad Arena"
+      },
+      "event3": {
+        "name": "DJ Phoenix",
+        "venue": "Live At Coca-Cola Arena"
+      }
+    },
+    "footer": {
+      "about": "About Us",
+      "contact": "Contact",
+      "terms": "Terms & Conditions",
+      "privacy": "Privacy Policy",
+      "copyright": "© 2026 BTEX. All rights reserved."
+    }
+  },
+  "AuthPage": {
+    "layout": {
+      "heroAlt": "Concert atmosphere",
+      "tagline": "Don't miss the hottest events! Secure your seats today for an unforgettable night of music, emotion, and energy!"
+    },
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to your account to continue.",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "submit": "Sign In",
+      "submitting": "Signing In...",
+      "noAccount": "Don't have an account?",
+      "register": "Create Account",
+      "success": "Welcome back!",
+      "error": "An unexpected error occurred"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Join BTEX and never miss an event.",
+      "firstNameLabel": "First Name",
+      "firstNamePlaceholder": "John",
+      "lastNameLabel": "Last Name",
+      "lastNamePlaceholder": "Doe",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Min. 6 characters",
+      "submit": "Create Account",
+      "submitting": "Creating Account...",
+      "hasAccount": "Already have an account?",
+      "login": "Sign In",
+      "success": "Account created!",
+      "error": "An unexpected error occurred"
+    },
+    "validation": {
+      "emailInvalid": "Please enter a valid email address",
+      "passwordMin": "Password must be at least 6 characters",
+      "passwordRequired": "Password is required",
+      "firstNameRequired": "First name is required",
+      "lastNameRequired": "Last name is required"
+    }
+  },
+  "Dashboard": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "events": "Events",
+      "tickets": "My Tickets"
+    },
+    "header": {
+      "search": "Search...",
+      "logout": "Log Out"
+    },
+    "overview": {
+      "totalEvents": "Total Events",
+      "totalRevenue": "Total Revenue",
+      "occupancyRate": "Avg Occupancy",
+      "soldTickets": "Sold Tickets",
+      "recentEvents": "Recent Events"
+    },
+    "eventsTable": {
+      "name": "Name",
+      "type": "Type",
+      "capacity": "Capacity",
+      "price": "Price",
+      "status": "Status",
+      "actions": "Actions",
+      "active": "Active",
+      "inactive": "Inactive",
+      "seats": "seats",
+      "edit": "Edit",
+      "delete": "Delete",
+      "view": "View",
+      "reserve": "Reserve",
+      "empty": "No events found",
+      "emptyHint": "Events you create will appear here."
+    },
+    "ticketsTable": {
+      "code": "Ticket Code",
+      "seat": "Seat",
+      "event": "Event",
+      "status": "Status",
+      "actions": "Actions",
+      "pay": "Pay",
+      "cancel": "Cancel",
+      "empty": "No tickets found",
+      "emptyHint": "Your reserved and purchased tickets will appear here."
+    },
+    "eventsPage": {
+      "title": "Events",
+      "subtitle": "Manage and monitor all events.",
+      "createEvent": "Create Event"
+    },
+    "ticketsPage": {
+      "title": "My Tickets",
+      "subtitle": "View and manage your ticket reservations.",
+      "allEvents": "All Events"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "pageInfo": "Page {current} of {total}"
+    },
+    "confirmations": {
+      "reserveTitle": "Reserve Ticket",
+      "reserveMessage": "Are you sure you want to reserve a ticket for {event}?",
+      "reserveConfirm": "Reserve",
+      "cancelTitle": "Cancel Reservation",
+      "cancelMessage": "Are you sure you want to cancel this reservation? This action cannot be undone.",
+      "cancelConfirm": "Cancel Reservation",
+      "cancelBtn": "Go Back",
+      "deleteTitle": "Delete Event",
+      "deleteMessage": "Are you sure you want to delete {event}? This will remove all associated tickets. This action cannot be undone.",
+      "deleteConfirm": "Delete Event"
+    },
+    "paymentDialog": {
+      "title": "Payment",
+      "creditCard": "Credit Card",
+      "expires": "Expires",
+      "cardNumber": "Card Number",
+      "expiryDate": "Expiry Date",
+      "payNow": "Pay Now"
+    },
+    "editEventDialog": {
+      "subtitle": "Edit {type} event details",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter event description...",
+      "capacity": "Capacity",
+      "capacityHint": "Adjusting capacity will add or remove unsold seats.",
+      "eventDate": "Event Date",
+      "cancel": "Cancel",
+      "save": "Save Changes"
+    },
+    "createEventDialog": {
+      "title": "Create Event",
+      "subtitle": "Fill in the details to create a new event.",
+      "name": "Event Name",
+      "namePlaceholder": "Enter event name...",
+      "type": "Event Type",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe the event...",
+      "price": "Price",
+      "capacity": "Capacity",
+      "eventDate": "Date",
+      "cancel": "Cancel",
+      "create": "Create Event"
+    }
+  }
+}

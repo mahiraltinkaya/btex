@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["views"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  CUSTOMER
+  ADMIN
+}
+
+enum TicketStatus {
+  OPEN
+  RESERVED
+  SOLD
+}
+
+enum EventType {
+  CONCERT
+  FESTIVAL
+  CONFERENCE
+  OTHER
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+}
+
+model Users {
+  id           String         @id @default(uuid())
+  email        String         @unique
+  password     String
+  firstName    String?
+  lastName     String?
+  role         UserRole       @default(CUSTOMER)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  tickets      Tickets[]
+  transactions Transactions[]
+
+  @@unique([email, password])
+}
+
+model Tickets {
+  id           String         @id @default(uuid())
+  ticketCode   String         @unique
+  seatNumber   Int
+  status       TicketStatus   @default(OPEN)
+  eventId      String
+  event        Events         @relation(fields: [eventId], references: [id])
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  userId       String?
+  user         Users?         @relation(fields: [userId], references: [id])
+  transactions Transactions[]
+}
+
+model Transactions {
+  id        String            @id @default(uuid())
+  amount    Float
+  eventId   String
+  event     Events            @relation(fields: [eventId], references: [id])
+  ticketId  String
+  ticket    Tickets           @relation(fields: [ticketId], references: [id])
+  userId    String
+  user      Users             @relation(fields: [userId], references: [id])
+  status    TransactionStatus @default(PENDING)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
+
+model Events {
+  id           String         @id @default(uuid())
+  name         String
+  description  String
+  capacity     Int            @default(50)
+  amount       Float
+  type         EventType
+  eventDate    DateTime?
+  isActive     Boolean        @default(true)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  tickets      Tickets[]
+  transactions Transactions[]
+}
+
+view EventMonitor {
+  id              String    @unique
+  name            String
+  type            EventType
+  capacity        Int
+  amount          Float
+  isActive        Boolean   @map("is_active")
+  openTickets     Int       @map("open_tickets")
+  reservedTickets Int       @map("reserved_tickets")
+  soldTickets     Int       @map("sold_tickets")
+  totalRevenue    Float     @map("total_revenue")
+  occupancyRate   Float     @map("occupancy_rate")
+  createdAt       DateTime  @map("created_at")
+
+  @@map("event_monitor")
+}

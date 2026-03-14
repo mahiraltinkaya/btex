@@ -1,0 +1,20 @@
+{
+  "name": "btex-assesment",
+  "version": "1.0.0",
+  "private": true,
+  "description": "btext Assessment — Monorepo",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspaces --if-present",
+    "dev:api": "npm run dev -w @btex/api",
+    "dev:web": "npm run dev -w @btex/web",
+    "build": "npm run build --workspaces --if-present",
+    "type-check": "npm run type-check --workspaces --if-present",
+    "db:generate": "cd apps/api && npx prisma generate",
+    "db:push": "cd apps/api && npx prisma db push",
+    "db:studio": "cd apps/api && npx prisma studio"
+  }
+}

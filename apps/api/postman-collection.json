@@ -1,0 +1,785 @@
+{
+  "info": {
+    "_postman_id": "btex-api-collection",
+    "name": "btext Assessment API",
+    "description": "btext Assessment – Etkinlik & Bilet Yönetim API'si.\n\n## Auth Akışı\n1. Register veya Login ile giriş yapın.\n2. Response'daki `accessToken` cookie'si otomatik olarak set edilir.\n3. Korumalı endpoint'ler için `Authorization: Bearer {{accessToken}}` header'ı kullanılır.\n\n## Roller\n- **CUSTOMER**: Bilet rezervasyonu, iptal ve ödeme yapabilir.\n- **ADMIN**: Etkinlik oluşturma, güncelleme ve silme işlemleri yapabilir.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3001",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "eventId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "ticketId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "transactionId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            },
+            "description": "Sunucunun ayakta olup olmadığını kontrol eder."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"status\": \"ok\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "description": "Kullanıcı kayıt, giriş ve token yenileme endpoint'leri. Cookie tabanlı JWT auth kullanılır.",
+      "item": [
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const cookies = pm.response.headers.filter(h => h.key === 'set-cookie');",
+                  "    cookies.forEach(c => {",
+                  "        if (c.value.startsWith('accessToken=')) {",
+                  "            const token = c.value.split('accessToken=')[1].split(';')[0];",
+                  "            pm.collectionVariables.set('accessToken', token);",
+                  "        }",
+                  "    });",
+                  "    pm.test('Register successful', () => {",
+                  "        pm.expect(pm.response.code).to.eql(200);",
+                  "        pm.expect(pm.response.json().user).to.have.property('id');",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"demo@btex.com\",\n  \"password\": \"Demo1234!\",\n  \"firstName\": \"Demo\",\n  \"lastName\": \"Kullanıcı\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Yeni bir kullanıcı kaydı oluşturur. Zod validation: email (geçerli format), password (min 6 karakter). Başarılı olursa accessToken ve refreshToken cookie'leri set edilir."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"user\": {\n    \"id\": \"uuid\",\n    \"email\": \"demo@btex.com\",\n    \"firstName\": \"Demo\",\n    \"lastName\": \"Kullanıcı\",\n    \"role\": \"CUSTOMER\",\n    \"createdAt\": \"2026-03-13T20:00:00.000Z\",\n    \"updatedAt\": \"2026-03-13T20:00:00.000Z\"\n  }\n}"
+            },
+            {
+              "name": "Conflict – User Exists",
+              "status": "Conflict",
+              "code": 409,
+              "body": "{\n  \"error\": \"User already exists\"\n}"
+            },
+            {
+              "name": "Validation Error",
+              "status": "Bad Request",
+              "code": 400,
+              "body": "{\n  \"message\": \"Geçerli bir email adresi giriniz, Şifre en az 6 karakter olmalıdır\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Register (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const cookies = pm.response.headers.filter(h => h.key === 'set-cookie');",
+                  "    cookies.forEach(c => {",
+                  "        if (c.value.startsWith('accessToken=')) {",
+                  "            const token = c.value.split('accessToken=')[1].split(';')[0];",
+                  "            pm.collectionVariables.set('accessToken', token);",
+                  "        }",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@btex.com\",\n  \"password\": \"Admin1234!\",\n  \"firstName\": \"Admin\",\n  \"lastName\": \"User\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Admin rolüyle bir kullanıcı kaydı oluşturur. Not: Rol, seed veya manuel DB güncellemesi ile ADMIN yapılmalıdır."
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const cookies = pm.response.headers.filter(h => h.key === 'set-cookie');",
+                  "    cookies.forEach(c => {",
+                  "        if (c.value.startsWith('accessToken=')) {",
+                  "            const token = c.value.split('accessToken=')[1].split(';')[0];",
+                  "            pm.collectionVariables.set('accessToken', token);",
+                  "        }",
+                  "    });",
+                  "    pm.test('Login successful', () => {",
+                  "        pm.expect(pm.response.code).to.eql(200);",
+                  "        pm.expect(pm.response.json().user).to.have.property('id');",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"demo@btex.com\",\n  \"password\": \"Demo1234!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Email ve parola ile giriş yapar. Zod validation uygulanır. Başarılı olursa accessToken ve refreshToken cookie'leri set edilir."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"user\": {\n    \"id\": \"uuid\",\n    \"email\": \"demo@btex.com\",\n    \"firstName\": \"Demo\",\n    \"lastName\": \"Kullanıcı\",\n    \"role\": \"CUSTOMER\",\n    \"createdAt\": \"2026-03-13T20:00:00.000Z\",\n    \"updatedAt\": \"2026-03-13T20:00:00.000Z\"\n  }\n}"
+            },
+            {
+              "name": "Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "body": "{\n  \"message\": \"User not found\"\n}"
+            },
+            {
+              "name": "Invalid Password",
+              "status": "Unauthorized",
+              "code": 401,
+              "body": "{\n  \"message\": \"Invalid password\"\n}"
+            },
+            {
+              "name": "Validation Error",
+              "status": "Bad Request",
+              "code": 400,
+              "body": "{\n  \"message\": \"Geçerli bir email adresi giriniz\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const cookies = pm.response.headers.filter(h => h.key === 'set-cookie');",
+                  "    cookies.forEach(c => {",
+                  "        if (c.value.startsWith('accessToken=')) {",
+                  "            const token = c.value.split('accessToken=')[1].split(';')[0];",
+                  "            pm.collectionVariables.set('accessToken', token);",
+                  "        }",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/refresh-token",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "refresh-token"]
+            },
+            "description": "Cookie'deki refreshToken ile yeni accessToken ve refreshToken üretir."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"user\": {\n    \"id\": \"uuid\",\n    \"email\": \"demo@btex.com\",\n    \"firstName\": \"Demo\",\n    \"lastName\": \"Kullanıcı\",\n    \"role\": \"CUSTOMER\"\n  }\n}"
+            },
+            {
+              "name": "Missing Token",
+              "status": "Unauthorized",
+              "code": 401,
+              "body": "{\n  \"message\": \"Refresh token not found\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Events",
+      "description": "Etkinlik CRUD endpoint'leri. GET istekleri authMiddleware, CUD istekleri hem authMiddleware hem adminMiddleware gerektirir.",
+      "item": [
+        {
+          "name": "Get All Events",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/events/get-all",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "events", "get-all"]
+            },
+            "description": "Tüm etkinlikleri listeler."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": \"uuid\",\n    \"name\": \"Rock Festivali 2026\",\n    \"description\": \"İstanbul'un en büyük rock festivali\",\n    \"capacity\": 100,\n    \"amount\": 250.00,\n    \"type\": \"FESTIVAL\",\n    \"isActive\": true,\n    \"createdAt\": \"2026-03-13T20:00:00.000Z\",\n    \"updatedAt\": \"2026-03-13T20:00:00.000Z\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get Event by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/events/get/{{eventId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "events", "get", "{{eventId}}"]
+            },
+            "description": "URL parametresindeki ID'ye göre tek bir etkinlik getirir."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"id\": \"uuid\",\n  \"name\": \"Rock Festivali 2026\",\n  \"description\": \"İstanbul'un en büyük rock festivali\",\n  \"capacity\": 100,\n  \"amount\": 250.00,\n  \"type\": \"FESTIVAL\",\n  \"isActive\": true,\n  \"createdAt\": \"2026-03-13T20:00:00.000Z\",\n  \"updatedAt\": \"2026-03-13T20:00:00.000Z\"\n}"
+            },
+            {
+              "name": "Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "body": "{\n  \"message\": \"Event not found\"\n}"
+            },
+            {
+              "name": "Missing ID",
+              "status": "Bad Request",
+              "code": 400,
+              "body": "{\n  \"message\": \"Event ID is required\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Event – Festival (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Event created', () => {",
+                  "    pm.expect(pm.response.code).to.eql(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Rock Festivali 2026\",\n  \"description\": \"İstanbul'un en büyük rock festivali. 3 gün boyunca 20+ sahne, 100+ sanatçı.\",\n  \"type\": \"FESTIVAL\",\n  \"amount\": 250.00,\n  \"capacity\": 100\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/events/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "events", "create"]
+            },
+            "description": "Yeni bir etkinlik oluşturur. Capacity belirtilmezse varsayılan 50 bilet oluşturulur. Sadece ADMIN rolü erişebilir."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Event created successfully\"\n}"
+            },
+            {
+              "name": "Forbidden",
+              "status": "Unauthorized",
+              "code": 401,
+              "body": "{\n  \"message\": \"Don't have permission to access this resource\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Event – Konser (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tarkan Konseri\",\n  \"description\": \"Tarkan İstanbul Harbiye Açıkhava'da! Efsanevi şarkılarıyla unutulmaz bir gece.\",\n  \"type\": \"CONCERT\",\n  \"amount\": 500.00,\n  \"capacity\": 200\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/events/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "events", "create"]
+            },
+            "description": "Yeni bir konser etkinliği oluşturur."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Event – Konferans (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"DevFest İstanbul 2026\",\n  \"description\": \"Google Developer Groups tarafından düzenlenen yıllık yazılım konferansı. AI, Web, Mobile ve Cloud konularında 30+ oturum.\",\n  \"type\": \"CONFERENCE\",\n  \"amount\": 0,\n  \"capacity\": 500\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/events/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "events", "create"]
+            },
+            "description": "Ücretsiz bir konferans etkinliği oluşturur."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Event (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{eventId}}\",\n  \"name\": \"Rock Festivali 2026 – Güncellendi\",\n  \"description\": \"İstanbul'un en büyük rock festivali – Yeni sahne eklendi!\",\n  \"type\": \"FESTIVAL\",\n  \"capacity\": 150\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/events/update",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "events", "update"]
+            },
+            "description": "Mevcut bir etkinliği günceller. Serializable isolation ile kapasite race condition'ı engellenir. Sadece ADMIN rolü erişebilir."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Event updated successfully\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Event (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{eventId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/events/delete",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "events", "delete"]
+            },
+            "description": "Bir etkinliği siler. Satılmış veya RESERVED biletler varsa etkinlik silinmez, sadece pasif duruma alınır. Sadece ADMIN rolü erişebilir."
+          },
+          "response": [
+            {
+              "name": "Success – Deleted",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Event deleted successfully\"\n}"
+            },
+            {
+              "name": "Success – Deactivated (Active tickets exist)",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Satılmış veya rezerve biletler bulunduğu için etkinlik silinemedi. Etkinlik pasif duruma alındı. Bilet iptalleri için sistem yöneticisi ile iletişime geçiniz.\",\n  \"isActive\": false\n}"
+            },
+            {
+              "name": "Missing ID",
+              "status": "Bad Request",
+              "code": 400,
+              "body": "{\n  \"message\": \"Event ID is required\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Booking",
+      "description": "Bilet rezervasyonu, iptal ve ödeme endpoint'leri. Tüm istekler authMiddleware gerektirir. Serializable isolation ile race condition'lar engellenir. Sahiplik kontrolleri uygulanır.",
+      "item": [
+        {
+          "name": "Reserve Ticket (Booking)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ticketId\": \"{{ticketId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/booking/booking",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "booking", "booking"]
+            },
+            "description": "Bir bileti RESERVED durumuna alır ve PENDING bir transaction oluşturur. Bilet OPEN durumunda olmalıdır. Serializable isolation ile double-booking engellenir."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Booking reserved\"\n}"
+            },
+            {
+              "name": "Ticket Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "body": "{\n  \"message\": \"Ticket not found\"\n}"
+            },
+            {
+              "name": "Ticket Not Available",
+              "status": "Conflict",
+              "code": 409,
+              "body": "{\n  \"message\": \"Ticket is not available for booking\"\n}"
+            },
+            {
+              "name": "Event Inactive",
+              "status": "Gone",
+              "code": 410,
+              "body": "{\n  \"message\": \"Event is no longer active\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Cancel Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ticketId\": \"{{ticketId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/booking/cancel",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "booking", "cancel"]
+            },
+            "description": "Rezerve edilmiş bir bileti iptal eder. Bilet OPEN'a döner ve ilgili PENDING transaction silinir. Sahiplik kontrolü uygulanır."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Booking cancelled\"\n}"
+            },
+            {
+              "name": "Not Your Ticket",
+              "status": "Forbidden",
+              "code": 403,
+              "body": "{\n  \"message\": \"You don't own this ticket\"\n}"
+            },
+            {
+              "name": "Ticket Not Reserved",
+              "status": "Conflict",
+              "code": 409,
+              "body": "{\n  \"message\": \"Ticket is not reserved\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transactionId\": \"{{transactionId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/booking/payment",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "booking", "payment"]
+            },
+            "description": "PENDING bir transaction için ödeme işlemi yapar. Bilet SOLD, transaction COMPLETED durumuna geçer. Sahiplik kontrolü uygulanır."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Payment successful\"\n}"
+            },
+            {
+              "name": "Not Your Transaction",
+              "status": "Forbidden",
+              "code": 403,
+              "body": "{\n  \"message\": \"You don't own this transaction\"\n}"
+            },
+            {
+              "name": "Transaction Not Pending",
+              "status": "Conflict",
+              "code": 409,
+              "body": "{\n  \"message\": \"Transaction is not pending\"\n}"
+            },
+            {
+              "name": "Transaction Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "body": "{\n  \"message\": \"Transaction not found\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Monitor",
+      "description": "Etkinlik istatistikleri (PostgreSQL View). Bilet durumları, gelir ve doluluk oranı. Sadece ADMIN erişebilir.",
+      "item": [
+        {
+          "name": "Get All Event Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/monitor/events",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "monitor", "events"]
+            },
+            "description": "Tüm etkinliklerin bilet istatistiklerini döner. PostgreSQL event_monitor view'ından okur."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": \"uuid\",\n    \"name\": \"Rock Festivali 2026\",\n    \"type\": \"FESTIVAL\",\n    \"capacity\": 100,\n    \"amount\": 250.00,\n    \"isActive\": true,\n    \"openTickets\": 85,\n    \"reservedTickets\": 5,\n    \"soldTickets\": 10,\n    \"totalRevenue\": 2500.00,\n    \"occupancyRate\": 15.00,\n    \"createdAt\": \"2026-03-13T20:00:00.000Z\"\n  }\n]"
+            },
+            {
+              "name": "Forbidden",
+              "status": "Unauthorized",
+              "code": 401,
+              "body": "{\n  \"message\": \"Don't have permission to access this resource\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Event Stats by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/monitor/events/{{eventId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "monitor", "events", "{{eventId}}"]
+            },
+            "description": "Tek bir etkinliğin bilet istatistiklerini döner."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"id\": \"uuid\",\n  \"name\": \"Rock Festivali 2026\",\n  \"type\": \"FESTIVAL\",\n  \"capacity\": 100,\n  \"amount\": 250.00,\n  \"isActive\": true,\n  \"openTickets\": 85,\n  \"reservedTickets\": 5,\n  \"soldTickets\": 10,\n  \"totalRevenue\": 2500.00,\n  \"occupancyRate\": 15.00,\n  \"createdAt\": \"2026-03-13T20:00:00.000Z\"\n}"
+            },
+            {
+              "name": "Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "body": "{\n  \"message\": \"Event not found\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
