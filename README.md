@@ -131,7 +131,7 @@ Seed script ile oluşturulan admin kullanıcı:
 
 ## Postman Collection
 
-Repo kökünde `postman-collection.json` dosyasını Postman'e import et.
+Repo kökünde `BTEX Assessment API.postman_collection.json` dosyasını Postman'e import et.
 
 **Özellikler:**
 - `baseUrl` değişkeni → `http://localhost:3001`
