@@ -4,10 +4,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Menu, Search, LogOut, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Input } from "@/components/ui/input";
 import { logout } from "@/actions/auth";
+import { useEventStore } from "@/stores/event-store";
+import { useTicketStore } from "@/stores/ticket-store";
 
 interface DashboardHeaderProps {
   onMenuToggle: () => void;
@@ -22,12 +24,19 @@ function getPageTitle(pathname: string, t: (key: string) => string): string {
 export function DashboardHeader({ onMenuToggle }: DashboardHeaderProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const clearEvents = useEventStore((s) => s.clearEvents);
+  const clearTickets = useTicketStore((s) => s.clearTickets);
   const tNav = useTranslations("Dashboard.nav");
   const tHeader = useTranslations("Dashboard.header");
   const pageTitle = getPageTitle(pathname, tNav);
+
   const logoutMutation = useMutation({
     mutationFn: logout,
     onSuccess: () => {
+      queryClient.clear();
+      clearEvents();
+      clearTickets();
       router.push("/");
     },
   });

@@ -90,9 +90,7 @@ export default function TicketsPage() {
         </div>
       ) : (
         <TicketsTable
-          tickets={tickets.sort((a, b) =>
-            a.seatNumber - b.seatNumber,
-          )}
+          tickets={tickets.sort((a, b) => a.seatNumber - b.seatNumber)}
         />
       )}
 
