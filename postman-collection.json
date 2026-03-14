@@ -51,16 +51,13 @@
                 "type": "text/javascript",
                 "exec": [
                   "if (pm.response.code === 200) {",
-                  "    const cookies = pm.response.headers.filter(h => h.key === 'set-cookie');",
-                  "    cookies.forEach(c => {",
-                  "        if (c.value.startsWith('accessToken=')) {",
-                  "            const token = c.value.split('accessToken=')[1].split(';')[0];",
-                  "            pm.collectionVariables.set('accessToken', token);",
-                  "        }",
-                  "    });",
+                  "    const body = pm.response.json();",
+                  "    if (body.accessToken) {",
+                  "        pm.collectionVariables.set('accessToken', body.accessToken);",
+                  "    }",
                   "    pm.test('Register successful', () => {",
                   "        pm.expect(pm.response.code).to.eql(200);",
-                  "        pm.expect(pm.response.json().user).to.have.property('id');",
+                  "        pm.expect(body.user).to.have.property('id');",
                   "    });",
                   "}"
                 ]
@@ -91,16 +88,13 @@
                 "type": "text/javascript",
                 "exec": [
                   "if (pm.response.code === 200) {",
-                  "    const cookies = pm.response.headers.filter(h => h.key === 'set-cookie');",
-                  "    cookies.forEach(c => {",
-                  "        if (c.value.startsWith('accessToken=')) {",
-                  "            const token = c.value.split('accessToken=')[1].split(';')[0];",
-                  "            pm.collectionVariables.set('accessToken', token);",
-                  "        }",
-                  "    });",
+                  "    const body = pm.response.json();",
+                  "    if (body.accessToken) {",
+                  "        pm.collectionVariables.set('accessToken', body.accessToken);",
+                  "    }",
                   "    pm.test('Login successful', () => {",
                   "        pm.expect(pm.response.code).to.eql(200);",
-                  "        pm.expect(pm.response.json().user.role).to.eql('ADMIN');",
+                  "        pm.expect(body.user.role).to.eql('ADMIN');",
                   "    });",
                   "}"
                 ]
@@ -131,16 +125,13 @@
                 "type": "text/javascript",
                 "exec": [
                   "if (pm.response.code === 200) {",
-                  "    const cookies = pm.response.headers.filter(h => h.key === 'set-cookie');",
-                  "    cookies.forEach(c => {",
-                  "        if (c.value.startsWith('accessToken=')) {",
-                  "            const token = c.value.split('accessToken=')[1].split(';')[0];",
-                  "            pm.collectionVariables.set('accessToken', token);",
-                  "        }",
-                  "    });",
+                  "    const body = pm.response.json();",
+                  "    if (body.accessToken) {",
+                  "        pm.collectionVariables.set('accessToken', body.accessToken);",
+                  "    }",
                   "    pm.test('Login successful', () => {",
                   "        pm.expect(pm.response.code).to.eql(200);",
-                  "        pm.expect(pm.response.json().user.role).to.eql('CUSTOMER');",
+                  "        pm.expect(body.user.role).to.eql('CUSTOMER');",
                   "    });",
                   "}"
                 ]
@@ -171,13 +162,10 @@
                 "type": "text/javascript",
                 "exec": [
                   "if (pm.response.code === 200) {",
-                  "    const cookies = pm.response.headers.filter(h => h.key === 'set-cookie');",
-                  "    cookies.forEach(c => {",
-                  "        if (c.value.startsWith('accessToken=')) {",
-                  "            const token = c.value.split('accessToken=')[1].split(';')[0];",
-                  "            pm.collectionVariables.set('accessToken', token);",
-                  "        }",
-                  "    });",
+                  "    const body = pm.response.json();",
+                  "    if (body.accessToken) {",
+                  "        pm.collectionVariables.set('accessToken', body.accessToken);",
+                  "    }",
                   "}"
                 ]
               }

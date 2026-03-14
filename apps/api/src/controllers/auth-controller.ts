@@ -79,7 +79,7 @@ class AuthController {
 
       const { password: _, ...safeUser } = user;
 
-      res.json({ user: safeUser });
+      res.json({ user: safeUser, accessToken: token });
     } catch (error) {
       console.error(error);
       next(createError(500, t("AUTH_REGISTER_FAILED")));
@@ -126,7 +126,7 @@ class AuthController {
 
       const { password: _, ...safeUser } = user;
 
-      res.json({ user: safeUser });
+      res.json({ user: safeUser, accessToken: token });
     } catch (error) {
       console.error(error);
       next(createError(500, t("AUTH_LOGIN_FAILED")));
@@ -172,7 +172,7 @@ class AuthController {
 
       const { password: _, ...safeUser } = user;
 
-      res.json({ user: safeUser });
+      res.json({ user: safeUser, accessToken: token });
     } catch (error) {
       console.error(error);
       next(createError(500, t("AUTH_REFRESH_TOKEN_FAILED")));
