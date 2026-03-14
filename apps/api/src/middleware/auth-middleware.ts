@@ -6,11 +6,14 @@ import { t } from "../i18n";
 
 const authMiddleware = (req: Request, _res: Response, next: NextFunction) => {
   try {
-    const token = req.headers.authorization?.split(" ")[1];
+    const token =
+      req.headers.authorization?.split(" ")[1] ?? req.cookies.accessToken;
+
     if (!token) {
       return next(createError(401, t("AUTH_UNAUTHORIZED")));
     }
     const decodedToken = verifyToken(token);
+
     req.user = decodedToken as {
       role: string;
       id: string;

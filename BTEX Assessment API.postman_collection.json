@@ -1,0 +1,1205 @@
+{
+  "info": {
+    "_postman_id": "a883c31b-45f0-4f70-bd77-1d4d5ae404d6",
+    "name": "BTEX Assessment API",
+    "description": "BTEX – Event & Ticket Management API.\n\n## Auth\n\n1. Login veya Register çalıştırın — accessToken otomatik set edilir.\n    \n2. Tüm korumalı endpoint'ler `Authorization: Bearer {{accessToken}}` kullanır.\n    \n\n## Roller\n\n- **CUSTOMER** → Bilet rezervasyonu, iptal, ödeme\n    \n- **ADMIN** → Event CRUD + Monitor",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "9361694"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/health",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "health"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"status\": \"ok\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const body = pm.response.json();",
+                  "    if (body.accessToken) {",
+                  "        pm.collectionVariables.set('accessToken', body.accessToken);",
+                  "    }",
+                  "    pm.test('Register successful', () => {",
+                  "        pm.expect(pm.response.code).to.eql(200);",
+                  "        pm.expect(body.user).to.have.property('id');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"demo@btex.com\",\n  \"password\": \"Demo1234!\",\n  \"firstName\": \"Demo\",\n  \"lastName\": \"User\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const body = pm.response.json();",
+                  "    if (body.accessToken) {",
+                  "        pm.collectionVariables.set('accessToken', `${body.accessToken}`);",
+                  "    }",
+                  "    pm.test('Login successful', () => {",
+                  "        pm.expect(pm.response.code).to.eql(200);",
+                  "        pm.expect(body.user.role).to.eql('ADMIN');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@btex.com\",\n  \"password\": \"135790Test*\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login (Customer)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const body = pm.response.json();",
+                  "    if (body.accessToken) {",
+                  "        pm.collectionVariables.set('accessToken',`${body.accessToken}`);",
+                  "    }",
+                  "    pm.test('Login successful', () => {",
+                  "        pm.expect(pm.response.code).to.eql(200);",
+                  "        pm.expect(body.user.role).to.eql('CUSTOMER');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"demo@btex.com\",\n  \"password\": \"Demo1234!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const body = pm.response.json();",
+                  "    if (body.accessToken) {",
+                  "        pm.collectionVariables.set('accessToken', body.accessToken);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/refresh-token",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "refresh-token"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "JWT cookie-based auth. Register/Login sonrası accessToken otomatik set edilir."
+    },
+    {
+      "name": "Events",
+      "item": [
+        {
+          "name": "Get All Events",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/events/get-all?page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "events",
+                "get-all"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/events/get-all?page=1&limit=10",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "get-all"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"uuid\",\n      \"name\": \"Summer Beats Festival\",\n      \"description\": \"...\",\n      \"capacity\": 10,\n      \"amount\": 150,\n      \"type\": \"FESTIVAL\",\n      \"eventDate\": null,\n      \"isActive\": true,\n      \"createdAt\": \"2026-03-14T...\",\n      \"updatedAt\": \"2026-03-14T...\"\n    }\n  ],\n  \"total\": 6,\n  \"page\": 1,\n  \"limit\": 10,\n  \"totalPages\": 1\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Event by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/events/get/{{eventId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "events",
+                "get",
+                "{{eventId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Tickets",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/events/get-all-tickets?limit=10&page=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "events",
+                "get-all-tickets"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "eventId",
+                  "value": "{{eventId}}",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "ADMIN → tüm biletleri görür. CUSTOMER → sadece kendi biletlerini görür. eventId query param ile filtrelenebilir."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/events/get-all-tickets?limit=10&page=1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "get-all-tickets"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "eventId",
+                      "value": "{{eventId}}",
+                      "disabled": true
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "ADMIN → tüm biletleri görür. CUSTOMER → sadece kendi biletlerini görür. eventId query param ile filtrelenebilir."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"uuid\",\n      \"ticketCode\": \"eventId-1\",\n      \"seatNumber\": 1,\n      \"status\": \"OPEN\",\n      \"eventId\": \"uuid\",\n      \"userId\": null,\n      \"createdAt\": \"...\",\n      \"updatedAt\": \"...\",\n      \"event\": { \"name\": \"Summer Beats Festival\" },\n      \"transaction\": null\n    }\n  ],\n  \"total\": 60,\n  \"page\": 1,\n  \"limit\": 10,\n  \"totalPages\": 6\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Event (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman Test Event\",\n  \"description\": \"Created from Postman collection.\",\n  \"type\": \"CONCERT\",\n  \"amount\": 75.00,\n  \"capacity\": 20,\n  \"eventDate\": \"2026-06-15T20:00:00.000Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/events/create",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "events",
+                "create"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Postman Test Event\",\n  \"description\": \"Created from Postman collection.\",\n  \"type\": \"CONCERT\",\n  \"amount\": 75.00,\n  \"capacity\": 20,\n  \"eventDate\": \"2026-06-15T20:00:00.000Z\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/events/create",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "create"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"message\": \"Event created successfully\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Event (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{eventId}}\",\n  \"name\": \"Updated Event Name\",\n  \"description\": \"Updated description.\",\n  \"type\": \"FESTIVAL\",\n  \"capacity\": 25\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/events/update",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "events",
+                "update"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"{{eventId}}\",\n  \"name\": \"Updated Event Name\",\n  \"description\": \"Updated description.\",\n  \"type\": \"FESTIVAL\",\n  \"capacity\": 25\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/events/update",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "update"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"message\": \"Event updated successfully\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Event (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{eventId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/events/delete",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "events",
+                "delete"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Deleted",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"{{eventId}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/events/delete",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "delete"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"message\": \"Event deleted successfully\"\n}"
+            },
+            {
+              "name": "Deactivated (has active tickets)",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"{{eventId}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/events/delete",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "delete"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"message\": \"Event has active tickets and was deactivated instead.\",\n  \"isActive\": false\n}"
+            }
+          ]
+        }
+      ],
+      "description": "Event CRUD. GET → authMiddleware. POST/PUT/DELETE → authMiddleware + adminMiddleware."
+    },
+    {
+      "name": "Booking",
+      "item": [
+        {
+          "name": "Reserve Ticket by ID",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ticketId\": \"{{ticketId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/booking/booking",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "booking",
+                "booking"
+              ]
+            },
+            "description": "Belirli bir ticket ID ile rezervasyon yapar. Ticket OPEN olmalıdır."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ticketId\": \"{{ticketId}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/booking/booking",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "booking",
+                    "booking"
+                  ]
+                },
+                "description": "Belirli bir ticket ID ile rezervasyon yapar. Ticket OPEN olmalıdır."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"message\": \"Booking reserved\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Reserve Ticket by Event",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"eventId\": \"{{eventId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/booking/reserve-by-event",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "booking",
+                "reserve-by-event"
+              ]
+            },
+            "description": "Event ID ile otomatik olarak ilk müsait bileti rezerve eder (seatNumber ASC)."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"eventId\": \"{{eventId}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/booking/reserve-by-event",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "booking",
+                    "reserve-by-event"
+                  ]
+                },
+                "description": "Event ID ile otomatik olarak ilk müsait bileti rezerve eder (seatNumber ASC)."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"message\": \"Booking reserved\"\n}"
+            },
+            {
+              "name": "Sold Out",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"eventId\": \"{{eventId}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/booking/reserve-by-event",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "booking",
+                    "reserve-by-event"
+                  ]
+                },
+                "description": "Event ID ile otomatik olarak ilk müsait bileti rezerve eder (seatNumber ASC)."
+              },
+              "status": "Conflict",
+              "code": 409,
+              "_postman_previewlanguage": "Text",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"message\": \"Event is sold out\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Cancel Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ticketId\": \"{{ticketId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/booking/cancel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "booking",
+                "cancel"
+              ]
+            },
+            "description": "RESERVED bilet → OPEN'a döner, ilgili PENDING transaction silinir. Sahiplik kontrolü yapılır."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ticketId\": \"{{ticketId}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/booking/cancel",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "booking",
+                    "cancel"
+                  ]
+                },
+                "description": "RESERVED bilet → OPEN'a döner, ilgili PENDING transaction silinir. Sahiplik kontrolü yapılır."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"message\": \"Booking cancelled\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transactionId\": \"{{transactionId}}\",\n  \"cardNumber\": \"4532015112830366\",\n  \"expiry\": \"12/28\",\n  \"cvv\": \"123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/booking/payment",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "booking",
+                "payment"
+              ]
+            },
+            "description": "PENDING transaction için ödeme. Luhn + expiry + CVV validasyonu. Bilet SOLD, transaction COMPLETED olur."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transactionId\": \"{{transactionId}}\",\n  \"cardNumber\": \"4532015112830366\",\n  \"expiry\": \"12/28\",\n  \"cvv\": \"123\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/booking/payment",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "booking",
+                    "payment"
+                  ]
+                },
+                "description": "PENDING transaction için ödeme. Luhn + expiry + CVV validasyonu. Bilet SOLD, transaction COMPLETED olur."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"message\": \"Payment successful\"\n}"
+            },
+            {
+              "name": "Invalid Card",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transactionId\": \"{{transactionId}}\",\n  \"cardNumber\": \"4532015112830366\",\n  \"expiry\": \"12/28\",\n  \"cvv\": \"123\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/booking/payment",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "booking",
+                    "payment"
+                  ]
+                },
+                "description": "PENDING transaction için ödeme. Luhn + expiry + CVV validasyonu. Bilet SOLD, transaction COMPLETED olur."
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "Text",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"message\": \"Invalid card details\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "Bilet rezervasyonu, iptal ve ödeme. Serializable isolation ile race condition engellenir."
+    },
+    {
+      "name": "Monitor (Admin)",
+      "item": [
+        {
+          "name": "Get All Event Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/monitor/events",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "monitor",
+                "events"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/monitor/events",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "monitor",
+                    "events"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [],
+              "cookie": [],
+              "body": "[\n  {\n    \"id\": \"uuid\",\n    \"name\": \"Summer Beats Festival\",\n    \"type\": \"FESTIVAL\",\n    \"capacity\": 10,\n    \"amount\": 150,\n    \"isActive\": true,\n    \"openTickets\": 10,\n    \"reservedTickets\": 0,\n    \"soldTickets\": 0,\n    \"totalRevenue\": 0,\n    \"occupancyRate\": 0,\n    \"createdAt\": \"2026-03-14T...\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get Event Stats by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/monitor/events/{{eventId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "monitor",
+                "events",
+                "{{eventId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Event istatistikleri — PostgreSQL View. Sadece ADMIN erişebilir."
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3001"
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "eventId",
+      "value": ""
+    },
+    {
+      "key": "ticketId",
+      "value": ""
+    },
+    {
+      "key": "transactionId",
+      "value": ""
+    }
+  ]
+}
