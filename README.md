@@ -124,7 +124,7 @@ Seed script ile oluşturulan admin kullanıcı:
 | Alan | Değer |
 |------|-------|
 | Email | `demo@btex.com` |
-| Password | `135790Test*` |
+| Password | `Demo1234!` |
 | Role | `CUSTOMER` |
 
 ---
