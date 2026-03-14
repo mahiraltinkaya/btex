@@ -1,4 +1,4 @@
-# BTEX Assessment
+# BTEX 
 
 Event & Ticket Management — Full-Stack Monorepo (Express.js + Next.js)
 
