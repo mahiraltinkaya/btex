@@ -264,7 +264,6 @@ export function TicketsTable({ tickets }: TicketsTableProps) {
         )}
       </div>
 
-      {/* Payment Dialog */}
       <PaymentDialog
         open={!!payingTransactionId}
         onOpenChange={(open) => {

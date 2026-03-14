@@ -18,14 +18,11 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
 
   return (
     <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
-      {/* Page info */}
       <p className="text-xs text-white/30">
         {t("pageInfo", { current: page, total: totalPages })}
       </p>
 
-      {/* Controls */}
       <div className="flex items-center gap-1">
-        {/* Previous */}
         <button
           type="button"
           disabled={page <= 1}
@@ -36,7 +33,6 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
           <span className="hidden sm:inline">{t("previous")}</span>
         </button>
 
-        {/* Page numbers */}
         {pages.map((p, i) =>
           p === "..." ? (
             <span key={`ellipsis-${i}`} className="px-1 text-xs text-white/20">
@@ -58,7 +54,6 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
           ),
         )}
 
-        {/* Next */}
         <button
           type="button"
           disabled={page >= totalPages}

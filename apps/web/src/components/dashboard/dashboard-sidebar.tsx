@@ -23,7 +23,6 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
 
   const sidebarContent = (
     <div className="flex h-full flex-col">
-      {/* Logo */}
       <div className="flex h-16 items-center justify-between px-6">
         <Link
           href="/"
@@ -31,7 +30,6 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
         >
           B<span className="text-[#e63946]">TEX</span>
         </Link>
-        {/* Mobile close */}
         <button
           type="button"
           onClick={onClose}
@@ -42,7 +40,6 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
         </button>
       </div>
 
-      {/* Nav */}
       <nav className="mt-4 flex-1 space-y-1 px-3">
         {NAV_ITEMS.map((item) => {
           const isActive =
@@ -73,7 +70,6 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
         })}
       </nav>
 
-      {/* Bottom branding */}
       <div className="border-t border-white/5 px-6 py-4">
         <p className="text-[10px] tracking-wide text-white/20">© 2026 BTEX</p>
       </div>
@@ -82,12 +78,10 @@ export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
 
   return (
     <>
-      {/* Desktop sidebar */}
       <aside className="hidden w-64 shrink-0 border-r border-white/10 bg-white/[0.03] backdrop-blur-xl lg:block">
         {sidebarContent}
       </aside>
 
-      {/* Mobile overlay */}
       <AnimatePresence>
         {open && (
           <>

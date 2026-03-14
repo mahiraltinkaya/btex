@@ -55,7 +55,6 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6 sm:space-y-8">
-      {/* Stat Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {isLoading ? (
           Array.from({ length: 4 }).map((_, i) => (
@@ -90,7 +89,6 @@ export default function DashboardPage() {
         )}
       </div>
 
-      {/* Recent Events */}
       <div>
         <h2 className="mb-4 text-lg font-semibold text-white">
           {t("recentEvents")}

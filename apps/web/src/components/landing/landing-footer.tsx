@@ -9,7 +9,6 @@ export function LandingFooter() {
   return (
     <footer className="w-full border-t border-white/5 bg-[#050505] px-4 py-10 sm:py-14">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-8 sm:flex-row sm:items-start sm:justify-between">
-        {/* Logo */}
         <div className="flex flex-col items-center gap-3 sm:items-start">
           <Link
             href="/"
@@ -20,7 +19,6 @@ export function LandingFooter() {
           <p className="text-xs text-white/30">{t("copyright")}</p>
         </div>
 
-        {/* Links */}
         <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 sm:justify-end">
           <Link
             href="#"

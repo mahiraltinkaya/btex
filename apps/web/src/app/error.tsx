@@ -24,12 +24,10 @@ export default function Error({
         transition={{ duration: 0.5, ease: "easeOut" }}
         className="flex max-w-md flex-col items-center text-center"
       >
-        {/* Icon */}
         <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#e63946]/10">
           <AlertTriangle className="h-10 w-10 text-[#e63946]" />
         </div>
 
-        {/* Title */}
         <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
           Something went wrong
         </h1>
@@ -38,7 +36,6 @@ export default function Error({
           page.
         </p>
 
-        {/* Actions */}
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <motion.button
             onClick={reset}
@@ -70,7 +67,6 @@ export default function Error({
         </div>
       </motion.div>
 
-      {/* BTEX branding */}
       <div className="absolute bottom-8">
         <span className="text-sm font-extrabold tracking-tight text-white/20">
           B<span className="text-[#e63946]/30">TEX</span>

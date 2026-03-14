@@ -86,7 +86,6 @@ export const ConfirmationProvider = ({
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="border-white/10 bg-[#0a0a0b]/95 backdrop-blur-2xl sm:max-w-[420px]">
           <DialogHeader className="items-center text-center">
-            {/* Glowing icon */}
             <div className="relative mb-2">
               <div
                 className="absolute -inset-3 rounded-full blur-xl"

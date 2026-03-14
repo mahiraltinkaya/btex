@@ -75,7 +75,6 @@ export function EditEventDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="overflow-hidden border-white/10 bg-[#0a0a0b]/95 p-0 backdrop-blur-2xl sm:max-w-[480px]">
-        {/* Hero Image */}
         <div className="relative h-40 w-full">
           <Image
             src={imageSrc}
@@ -97,9 +96,7 @@ export function EditEventDialog({
           </div>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4 px-6 pt-2 pb-6">
-          {/* Description */}
           <div>
             <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-white/40">
               <FileText className="h-3.5 w-3.5" />
@@ -114,7 +111,6 @@ export function EditEventDialog({
             />
           </div>
 
-          {/* Capacity */}
           <div>
             <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-white/40">
               <Users className="h-3.5 w-3.5" />
@@ -134,7 +130,6 @@ export function EditEventDialog({
             </p>
           </div>
 
-          {/* Event Date */}
           <div>
             <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-white/40">
               <CalendarDays className="h-3.5 w-3.5" />
@@ -148,7 +143,6 @@ export function EditEventDialog({
             />
           </div>
 
-          {/* Actions */}
           <div className="flex gap-3 pt-2">
             <Button
               type="button"

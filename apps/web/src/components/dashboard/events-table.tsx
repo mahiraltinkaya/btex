@@ -131,7 +131,6 @@ export function EventsTable({ events, role = "ADMIN" }: EventsTableProps) {
               key={event.id}
               className="group relative overflow-hidden rounded-2xl border border-white/10 transition-all duration-300 hover:border-white/20 hover:shadow-xl hover:shadow-black/20"
             >
-              {/* Background Image */}
               <div className="absolute inset-0 h-80 w-full overflow-hidden cursor-pointer-none">
                 <Image
                   src={imageSrc}
@@ -140,10 +139,8 @@ export function EventsTable({ events, role = "ADMIN" }: EventsTableProps) {
                   className="object-cover transition-transform duration-500 group-hover:scale-105 "
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
-                {/* Dark overlay gradient */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
-                {/* Status badge top-left */}
                 <div className="absolute top-3 left-3">
                   <span
                     className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-semibold backdrop-blur-md ${badge.bg} ${badge.text}`}
@@ -152,7 +149,6 @@ export function EventsTable({ events, role = "ADMIN" }: EventsTableProps) {
                   </span>
                 </div>
 
-                {/* Active/Inactive top-right */}
                 <div className="absolute top-3 right-3">
                   <span
                     className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium backdrop-blur-md ${
@@ -257,7 +253,6 @@ export function EventsTable({ events, role = "ADMIN" }: EventsTableProps) {
         })}
       </div>
 
-      {/* Edit Event Dialog */}
       <EditEventDialog
         event={editingEvent}
         open={!!editingEvent}

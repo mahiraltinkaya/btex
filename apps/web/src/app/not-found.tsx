@@ -13,7 +13,6 @@ export default function NotFound() {
         transition={{ duration: 0.5, ease: "easeOut" }}
         className="flex max-w-md flex-col items-center text-center"
       >
-        {/* 404 Badge */}
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -30,7 +29,6 @@ export default function NotFound() {
           </span>
         </motion.div>
 
-        {/* Title */}
         <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
           Page Not Found
         </h1>
@@ -38,7 +36,6 @@ export default function NotFound() {
           The page you&apos;re looking for doesn&apos;t exist or has been moved.
         </p>
 
-        {/* Actions */}
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <Link href="/">
             <motion.button
@@ -70,7 +67,6 @@ export default function NotFound() {
         </div>
       </motion.div>
 
-      {/* BTEX branding */}
       <div className="absolute bottom-8">
         <span className="text-sm font-extrabold tracking-tight text-white/20">
           B<span className="text-[#e63946]/30">TEX</span>

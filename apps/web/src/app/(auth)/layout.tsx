@@ -1,19 +1,12 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { decryptSession } from "@/lib/auth";
 
 const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
-  const user = await decryptSession();
-  if (user) {
-    redirect("/dashboard");
-  }
   const t = await getTranslations("AuthPage.layout");
   return (
     <div className="relative flex min-h-screen flex-col bg-[#0a0a0a] lg:flex-row">
-      {/* ── Left Panel: Branding (desktop only) ── */}
       <div className="relative hidden w-1/2 items-center justify-center overflow-hidden lg:flex">
         <Image
           src="/images/landing/hero-bg.png"
@@ -44,9 +37,7 @@ const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
         </div>
       </div>
 
-      {/* ── Right Panel: Form Area ── */}
       <div className="flex flex-1 flex-col">
-        {/* Mobile top bar */}
         <header className="flex items-center justify-between px-5 py-4 lg:px-8 lg:py-6">
           <Link
             href="/"
@@ -55,8 +46,6 @@ const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
             B<span className="text-[#e63946]">TEX</span>
           </Link>
         </header>
-
-        {/* Form content */}
         <div className="flex flex-1 items-center justify-center px-5 pb-8 lg:px-12">
           <div className="w-full max-w-md">{children}</div>
         </div>

@@ -40,7 +40,6 @@ async function scanExpiredReservations(): Promise<void> {
       },
     });
 
-    let newEntries = 0;
     for (const tx of expiredTransactions) {
       if (!pendingReservations.has(tx.id)) {
         pendingReservations.set(tx.id, {
@@ -48,18 +47,7 @@ async function scanExpiredReservations(): Promise<void> {
           ticketId: tx.ticketId,
           expiresAt: tx.createdAt.getTime() + RESERVATION_TTL_MS,
         });
-        newEntries++;
       }
-    }
-
-    if (newEntries > 0) {
-      console.log(
-        `🗺️ [db-cron] Scan complete: ${newEntries} new expired reservations added to map (total: ${pendingReservations.size})`,
-      );
-    } else {
-      console.log(
-        `🗺️ [db-cron] Scan complete: no new expired reservations found (map size: ${pendingReservations.size})`,
-      );
     }
   } catch (error) {
     console.error(
@@ -92,9 +80,6 @@ async function resetSingleReservation(entry: ReservationEntry): Promise<void> {
             !transaction ||
             transaction.status !== TransactionStatus.PENDING
           ) {
-            console.log(
-              `⏭️ [db-cron] Skipping transaction=${entry.transactionId} (status: ${transaction?.status ?? "NOT_FOUND"})`,
-            );
             return;
           }
           await Promise.all([
@@ -109,10 +94,6 @@ async function resetSingleReservation(entry: ReservationEntry): Promise<void> {
               },
             }),
           ]);
-
-          console.log(
-            `✅ [db-cron] Reservation reset: transaction=${entry.transactionId} ticket=${entry.ticketId}`,
-          );
         },
         { isolationLevel: "Serializable" },
       );
@@ -169,18 +150,9 @@ function processExpiredReservations(): void {
  */
 export function startCronJobs(): void {
   cron.schedule("*/10 * * * *", () => {
-    console.log(
-      `⏰ [db-cron] Running reservation scan at ${new Date().toISOString()}`,
-    );
     scanExpiredReservations();
   });
 
   setInterval(processExpiredReservations, 30000);
-
-  console.log("⏰ [db-cron] Running initial reservation scan on boot...");
   scanExpiredReservations();
-
-  console.log(
-    "✅ [db-cron] Cron jobs & interval timers scheduled successfully",
-  );
 }

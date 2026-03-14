@@ -72,7 +72,6 @@ export function PaymentDialog({
           </DialogTitle>
         </DialogHeader>
 
-        {/* Flip Card */}
         <div
           className="mx-auto mt-2 mb-4 w-full max-w-[340px]"
           style={{ perspective: "1000px" }}
@@ -84,7 +83,6 @@ export function PaymentDialog({
               transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
             }}
           >
-            {/* Front */}
             <div
               className="absolute inset-0 flex flex-col justify-between rounded-2xl border border-white/10 p-6"
               style={{
@@ -121,7 +119,6 @@ export function PaymentDialog({
               </div>
             </div>
 
-            {/* Back */}
             <div
               className="absolute inset-0 flex flex-col justify-between rounded-2xl border border-white/10"
               style={{
@@ -146,9 +143,7 @@ export function PaymentDialog({
           </div>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Card Number */}
           <div>
             <label className="mb-1.5 block text-xs font-medium text-white/40">
               {t("cardNumber")}
@@ -167,7 +162,6 @@ export function PaymentDialog({
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            {/* Expiry */}
             <div>
               <label className="mb-1.5 block text-xs font-medium text-white/40">
                 {t("expiryDate")}
@@ -185,7 +179,6 @@ export function PaymentDialog({
               />
             </div>
 
-            {/* CVV */}
             <div>
               <label className="mb-1.5 block text-xs font-medium text-white/40">
                 CVV
@@ -220,7 +213,6 @@ export function PaymentDialog({
           </Button>
         </form>
 
-        {/* Security Trust Footer */}
         <div className="mt-2 border-t border-white/5 pt-4">
           <div className="flex items-center justify-center gap-5">
             <div className="flex items-center gap-1.5">

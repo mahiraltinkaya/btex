@@ -86,7 +86,6 @@ export default function EventsPage() {
         />
       )}
 
-      {/* Create Event Dialog */}
       <CreateEventDialog open={isCreateOpen} onOpenChange={setIsCreateOpen} />
     </div>
   );

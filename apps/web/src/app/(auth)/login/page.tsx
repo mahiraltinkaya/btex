@@ -56,7 +56,6 @@ export default function LoginPage() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
     >
-      {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
           {t("title")}
@@ -66,9 +65,7 @@ export default function LoginPage() {
         </p>
       </div>
 
-      {/* Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
-        {/* Email */}
         <div className="space-y-2">
           <Label htmlFor="email" className="text-sm font-medium text-white/70">
             {t("emailLabel")}
@@ -90,7 +87,6 @@ export default function LoginPage() {
           )}
         </div>
 
-        {/* Password */}
         <div className="space-y-2">
           <Label
             htmlFor="password"
@@ -115,7 +111,6 @@ export default function LoginPage() {
           )}
         </div>
 
-        {/* Submit */}
         <motion.button
           type="submit"
           disabled={loginMutation.isPending}
@@ -138,7 +133,6 @@ export default function LoginPage() {
         </motion.button>
       </form>
 
-      {/* Footer link */}
       <p className="mt-8 text-center text-sm text-white/40">
         {t("noAccount")}{" "}
         <Link

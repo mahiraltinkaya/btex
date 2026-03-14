@@ -21,7 +21,6 @@ export default function TicketsPage() {
   const [page, setPage] = useState(1);
   const [selectedEventId, setSelectedEventId] = useState<string>("all");
 
-  // Fetch events for filter dropdown
   const eventsQuery = useQuery({
     queryKey: ["events", "filter-options"],
     queryFn: () => getAllEvents(1, 100),
@@ -51,7 +50,6 @@ export default function TicketsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-xl font-bold tracking-tight text-white sm:text-2xl">
@@ -59,7 +57,6 @@ export default function TicketsPage() {
           </h2>
           <p className="mt-1 text-sm text-white/40">{t("subtitle")}</p>
         </div>
-        {/* Event Filter */}
         {eventOptions.length > 0 && (
           <div className="relative self-start">
             <select
