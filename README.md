@@ -121,6 +121,10 @@ Seed script ile oluşturulan admin kullanıcı:
 | Password | `135790Test*` |
 | Role | `ADMIN` |
 
+| Email | `demo@btex.com` |
+| Password | `135790Test*` |
+| Role | `CUSTOMER` |
+
 ---
 
 ## Postman Collection
