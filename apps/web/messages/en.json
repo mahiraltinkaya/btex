@@ -177,6 +177,10 @@
     },
     "editEventDialog": {
       "subtitle": "Edit {type} event details",
+      "name": "Event Name",
+      "namePlaceholder": "Enter event name...",
+      "type": "Event Type",
+      "price": "Price",
       "description": "Description",
       "descriptionPlaceholder": "Enter event description...",
       "capacity": "Capacity",

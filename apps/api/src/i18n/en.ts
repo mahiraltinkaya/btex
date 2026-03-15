@@ -22,6 +22,7 @@ export const en = {
   EVENT_UPDATED: "Event updated successfully",
   EVENT_DELETED: "Event deleted successfully",
   EVENT_NOT_FOUND: "Event not found",
+  EVENT_DATE_PAST: "Event date cannot be in the past",
   EVENT_INACTIVE: "Event is no longer active",
   EVENT_CREATE_FAILED: "Failed to create event",
   EVENT_UPDATE_FAILED: "Failed to update event",

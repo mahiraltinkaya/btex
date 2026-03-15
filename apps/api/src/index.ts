@@ -27,6 +27,42 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+app.use((req: Request, res: Response, next: NextFunction) => {
+  const start = Date.now();
+
+  res.on("finish", () => {
+    const duration = Date.now() - start;
+    const status = res.statusCode;
+
+    const colorCode =
+      status >= 500
+        ? "\x1b[31m"
+        : status >= 400
+          ? "\x1b[33m"
+          : status >= 300
+            ? "\x1b[36m"
+            : "\x1b[32m";
+
+    const methodColors: Record<string, string> = {
+      GET: "\x1b[36m",
+      POST: "\x1b[33m",
+      PUT: "\x1b[35m",
+      PATCH: "\x1b[35m",
+      DELETE: "\x1b[31m",
+    };
+
+    const methodColor = methodColors[req.method] || "\x1b[37m";
+    const reset = "\x1b[0m";
+    const dim = "\x1b[2m";
+
+    console.info(
+      `${dim}${new Date().toLocaleTimeString()}${reset} ${methodColor}${req.method.padEnd(7)}${reset} ${req.originalUrl} ${colorCode}${status}${reset} ${dim}${duration}ms${reset}`,
+    );
+  });
+
+  next();
+});
+
 app.get("/health", (_req: Request, res: Response) => {
   res.json({ status: "ok" });
 });

@@ -526,7 +526,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"{{eventId}}\",\n  \"name\": \"Updated Event Name\",\n  \"description\": \"Updated description.\",\n  \"type\": \"FESTIVAL\",\n  \"capacity\": 25\n}"
+              "raw": "{\n  \"id\": \"{{eventId}}\",\n  \"name\": \"Updated Event Name\",\n  \"description\": \"Updated description.\",\n  \"type\": \"FESTIVAL\",\n  \"amount\": 120.00,\n  \"capacity\": 25,\n  \"eventDate\": \"2026-07-20T19:00:00.000Z\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/events/update",
@@ -557,7 +557,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"id\": \"{{eventId}}\",\n  \"name\": \"Updated Event Name\",\n  \"description\": \"Updated description.\",\n  \"type\": \"FESTIVAL\",\n  \"capacity\": 25\n}"
+                  "raw": "{\n  \"id\": \"{{eventId}}\",\n  \"name\": \"Updated Event Name\",\n  \"description\": \"Updated description.\",\n  \"type\": \"FESTIVAL\",\n  \"amount\": 120.00,\n  \"capacity\": 25,\n  \"eventDate\": \"2026-07-20T19:00:00.000Z\"\n}"
                 },
                 "url": {
                   "raw": "{{baseUrl}}/api/events/update",

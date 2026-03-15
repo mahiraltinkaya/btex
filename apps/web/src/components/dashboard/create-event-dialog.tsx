@@ -211,6 +211,7 @@ export function CreateEventDialog({
                 type="date"
                 value={eventDate}
                 onChange={(e) => setEventDate(e.target.value)}
+                min={new Date().toISOString().slice(0, 10)}
                 className="h-10 w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 text-sm text-white placeholder:text-white/20 focus:border-[#e63946]/50 focus:ring-1 focus:ring-[#e63946]/30 focus:outline-none [color-scheme:dark]"
               />
             </div>

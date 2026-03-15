@@ -23,6 +23,7 @@ export interface UpdateEventRequest {
   name?: string;
   description?: string;
   type?: EventType;
+  amount?: number;
   capacity?: number;
   eventDate?: string | null;
 }

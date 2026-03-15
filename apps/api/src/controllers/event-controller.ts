@@ -9,6 +9,11 @@ class EventController {
     try {
       const { name, description, type, amount, capacity, eventDate } = req.body;
       const ticketCount = capacity ?? 50;
+
+      if (eventDate && new Date(eventDate) < new Date()) {
+        return next(createError(400, t("EVENT_DATE_PAST")));
+      }
+
       await prisma.$transaction(async (tx) => {
         const event = await tx.events.create({
           data: {
@@ -41,15 +46,29 @@ class EventController {
   };
   updateEvent = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id, name, description, type, status, capacity, eventDate } =
+      const { id, name, description, type, amount, capacity, eventDate } =
         req.body;
+
+      if (!id) {
+        return next(createError(400, t("VALIDATION_EVENT_ID_REQUIRED")));
+      }
+
+      if (eventDate && new Date(eventDate) < new Date()) {
+        return next(createError(400, t("EVENT_DATE_PAST")));
+      }
+
       let finalCapacity: number | undefined = capacity;
 
       await prisma.$transaction(
         async (tx) => {
-          const currentEvent = await tx.events.findUniqueOrThrow({
+          const currentEvent = await tx.events.findUnique({
             where: { id },
           });
+
+          if (!currentEvent) {
+            throw createError(404, t("EVENT_NOT_FOUND"));
+          }
+
           const oldCapacity = currentEvent.capacity;
 
           if (capacity !== undefined && capacity !== oldCapacity) {
@@ -102,6 +121,7 @@ class EventController {
               name,
               description,
               type,
+              ...(amount !== undefined && { amount }),
               ...(eventDate !== undefined && {
                 eventDate: eventDate ? new Date(eventDate) : null,
               }),
